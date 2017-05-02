@@ -70,6 +70,17 @@ function f:DataBrokerClick(mouseButton)
 
 end
 
+local function CmdTrigger ()
+	if(secure_buttons[1]:IsVisible() == true) then
+		f:HideSecureButtons()
+	else
+		f:ShowButtonBar();
+	end
+end
+
+SLASH_ARTIFACTPOWERCLICK1 = "/apclick";
+SlashCmdList["ARTIFACTPOWERCLICK"] = CmdTrigger;
+
 function f:ShowButtonBar()
 	--CreateUseButton
 	secure_button_count = 0
