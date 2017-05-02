@@ -1,7 +1,7 @@
 local tooltipScanner
 local tooltipName = "ArtifactPowerTooltipScanner"
 local bagPower,currentPower,worldQuestPower,worldQuestPowerLooseSoon,powerNextLevel;
-local f  = CreateFrame("frame",nil,UIParent);
+local f = CreateFrame("frame",nil,UIParent);
 local numberOverlay = {};
 local ldb =  LibStub:GetLibrary("LibDataBroker-1.1");
 local ldbPower;
@@ -19,19 +19,19 @@ local lwin = LibStub("LibWindow-1.1")
 local powerItemsInBag = {}
 local bankOpen = false;
 local apString = {
-	  ["enUS"] = "Grants (%d+) Artifact Power to your currently equipped Artifact",
-	 ["enGB"] = "Grants (%d+) Artifact Power to your currently equipped Artifact",
-	 ["ptBR"] = "Concede (%d+) de Poder do Artefato ao artefato equipado",
-	 ["esMX"] = "Otorga (%d+) p de Poder de artefacto para el artefacto que llevas equipado",
-	 ["deDE"] = "Gewährt Eurem derzeit ausgerüsteten Artefakt (%d+) Artefaktmacht",
-	 ["esES"] = "Otorga (%d+) p de poder de artefacto al artefacto que lleves equipado",
-	 ["frFR"] = "Confère (%d+) points de puissance à l’arme prodigieuse que vous maniez",
-	 ["itIT"] = "Fornisce (%d+) Potere Artefatto all'Artefatto attualmente equipaggiato",
-	 ["plPL"] = "Grants (%d+) Artifact Power to your currently equipped Artifact",
-	 ["ptPT"] = "Concede (%d+) de Poder do Artefato ao artefato equipado",
-	 ["ruRU"] = "Добавляет используемому в данный момент артефакту (%d+) ед силы артефакта",
-	 ["koKR"] = "현재 장착한 유물에 (%d+)의 유물력을 부여합니다",
-	 ["zhTW"] = "賦予你目前裝備的神兵武器(%d+)點神兵之力。",
+	["enUS"] = "Grants ([%d,\.]+)[ ]?([%l]*) Artifact Power to your currently equipped Artifact",
+	["enGB"] = "Grants ([%d,\.]+)[ ]?([%l]*) Artifact Power to your currently equipped Artifact",
+	["ptBR"] = "Concede ([%d,\.]+)[ ]?([%l]*) de Poder do Artefato ao artefato equipado",
+	["esMX"] = "Otorga ([%d,\.]+)[ ]?([%l]*) p de Poder de artefacto para el artefacto que llevas equipado",
+	["deDE"] = "Gewährt Eurem derzeit ausgerüsteten Artefakt ([%d,\.]+)[ ]?([%l]*) Artefaktmacht",
+	["esES"] = "Otorga ([%d,\.]+)[ ]?([%l]*) p de poder de artefacto al artefacto que lleves equipado",
+	["frFR"] = "Confère ([%d,\.]+)[ ]?([%l]*) points de puissance à l’arme prodigieuse que vous maniez",
+	["itIT"] = "Fornisce ([%d,\.]+)[ ]?([%l]*) Potere Artefatto all'Artefatto attualmente equipaggiato",
+	["plPL"] = "Grants ([%d,\.]+)[ ]?([%l]*) Artifact Power to your currently equipped Artifact",
+	["ptPT"] = "Concede ([%d,\.]+)[ ]?([%l]*) de Poder do Artefato ao artefato equipado",
+	["ruRU"] = "Добавляет используемому в данный момент артефакту ([%d,\.]+)[ ]?([%l]*) ед силы артефакта",
+	["koKR"] = "현재 장착한 유물에 ([%d,\.]+)[ ]?([%l]*)의 유물력을 부여합니다",
+	["zhTW"] = "賦予你目前裝備的神兵武器([%d,\.]+)[ ]?([%l]*)點神兵之力。",
 }
 local apStringLocal = apString[GetLocale()]
 function f:OnLoad()
@@ -402,12 +402,20 @@ function f:GetItemLinkArtifactPower(itemLink, baggy)
 				--	print (tooltipText)
 				--end
 				if(tooltipText ~= nil) then
-					 local ap = tooltipText:gsub("[,%.]", ""):match(apStringLocal) or ""
+					local ap, scale = tooltipText:match(apStringLocal)
+					ap = ap or ""
 					if ap ~= "" then
-						tooltipScanner:Hide()			
+						if scale == "million" then
+							if ap:find("[\.]") then 
+								ap = ap .. "00000"
+							else 
+								ap = ap .. "000000"
+							end
+						end
+						ap = ap:gsub("[,%.]", "")
+						tooltipScanner:Hide() 
 						return tonumber(ap);
 					end
-					
 				end
 			--matcher = "Grants (%d+) Artifact Power to your currently equipped Artifact"
            end
