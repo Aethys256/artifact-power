@@ -353,7 +353,8 @@ end
 
 function f:ReplaceTags(tag)
 	if(apStats[tag] == nil) then return 0 end
-	return "|c"..RGBPercToHex(ns.config["color"..tag][1],ns.config["color"..tag][2],ns.config["color"..tag][3],ns.config["color"..tag][4])..(apStats[tag] or 0).."|r"
+	local gain = f:FormatTotalGain((apStats[tag] or 0));
+	return "|c"..RGBPercToHex(ns.config["color"..tag][1],ns.config["color"..tag][2],ns.config["color"..tag][3],ns.config["color"..tag][4]).. gain .."|r"
 	--return tag
 end
 
