@@ -184,12 +184,14 @@ function f:FormatTotalGain(gain)
 		return gain
 	elseif gain < 1000000 then
 		return round(gain / 1000,3).."k"
+	elseif gain < 1000000000 then
+		return round(gain / 1000000,3).."m"
 	else
-		return round (gain / 1000000,3).."m"
+		return round(gain / 1000000000,3).."b"
 	end
 end
 
-function f:CreateUseButton(itemid,itemcount,totalGain)		
+function f:CreateUseButton(itemid,itemcount,totalGain)
 		secure_button_count=secure_button_count+1;
 		if(secure_buttons[secure_button_count]==nil) then
 			f:CreateSecureButttons(secure_button_count)
@@ -422,6 +424,12 @@ function f:GetItemLinkArtifactPower(itemLink, baggy)
 								ap = ap .. "00000"
 							else 
 								ap = ap .. "000000"
+							end
+						elseif scale == "billion" then
+							if ap:find("[\.]") then 
+								ap = ap .. "00000000"
+							else 
+								ap = ap .. "000000000"
 							end
 						end
 						ap = ap:gsub("[,%.]", "")
